@@ -1,0 +1,56 @@
+#+title: Work Notes
+
+* terraform task
+#+begin_src tf
+variable "resource_list" {
+  type = list(object({
+    name                      = string
+    key              = string
+    conn = string
+  }))
+  default = [
+    {"name":"app1", "key":"key1", "conn":"conn1"},
+    {"name":"app2", "key":"key2", "conn":"conn2"},
+    {"name":"app3", "key":"key3", "conn":"conn3"}
+  ]
+}
+
+#+end_src
+
+> var.resource_list
+tolist([
+  {
+    "conn" = "conn1"
+    "key" = "key1"
+    "name" = "app1"
+  },
+  {
+    "conn" = "conn2"
+    "key" = "key2"
+    "name" = "app2"
+  },
+  {
+    "conn" = "conn3"
+    "key" = "key3"
+    "name" = "app3"
+  },
+])
+> {for d in var.resource_list: d["name"]=>d["key"]}
+{
+  "app1" = "key1"
+  "app2" = "key2"
+  "app3" = "key3"
+}
+> {for d in var.resource_list: d["name"]=>d["conn"]}
+{
+  "app1" = "conn1"
+  "app2" = "conn2"
+  "app3" = "conn3"
+}
+> lookup({for d in var.resource_list: d["name"]=>d["conn"]}, "app1", "")
+"conn1"
+> lookup({for d in var.resource_list: d["name"]=>d["conn"]}, "non_app", "")
+""
+>
+
+#+end_src
