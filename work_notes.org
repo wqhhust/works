@@ -1,11 +1,12 @@
 #+title: Work Notes
 
 * terraform task
+Variables
 #+begin_src tf
 variable "resource_list" {
   type = list(object({
-    name                      = string
-    key              = string
+    name = string
+    key  = string
     conn = string
   }))
   default = [
@@ -17,6 +18,8 @@ variable "resource_list" {
 
 #+end_src
 
+result in terrafor console
+#+begin_src
 > var.resource_list
 tolist([
   {
