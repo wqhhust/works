@@ -1,0 +1,35 @@
+#+title: Bash
+
+* move mulitiple files after zip
+** request
+#+begin_src
+I need a short script to rename archived files in a zip file at the time of extraction.
+
+For example, a zip file has the following filenames:
+
+filename0001.jpg
+filename0002.jpg
+filename0003.jpg
+.
+.
+The script would use unzip -Z1 (zipinfo) to get the filenames and then rename them as such:
+
+0001.jpg
+0002.jpg
+0003.jpg
+
+#+end_src
+** solution
+#+begin_src bash
+➜  test unzip pic.zip
+Archive:  pic.zip
+ extracting: filename0001.jpg
+ extracting: filename0002.jpg
+➜  test unzip -Z1 ~/test/pic.zip|awk  '{dir=ENVIRON["PWD"]; file=substr($1,length($1)-7); cmd= dir "/" $1 " " dir "/" file;print cmd}'|xargs -I {} sh -c "mv {}"
+➜  test ls -l
+total 4
+-rw-rw-r-- 1 vagrant vagrant   0 Feb 20 21:12 0001.jpg
+-rw-rw-r-- 1 vagrant vagrant   0 Feb 20 21:13 0002.jpg
+-rw-rw-r-- 1 vagrant vagrant 342 Feb 20 21:13 pic.zip
+➜  test
+#+end_src
